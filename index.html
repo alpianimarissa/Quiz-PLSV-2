@@ -12,6 +12,11 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
         body {
@@ -126,7 +131,7 @@
             <section class="lg:col-span-3 space-y-5">
                 
                 <!-- Question Card -->
-                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 relative">
+                <div id="question-card" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 relative">
                     
                     <!-- Top Bar of Question -->
                     <div class="flex flex-wrap justify-between items-center gap-2 mb-6 pb-4 border-b border-slate-100">
@@ -291,48 +296,48 @@
 
     <!-- JavaScript Quiz Logic -->
     <script>
-        // 30 Balanced PLSV Questions Bank
+        // 30 Balanced PLSV Questions Bank with randomized answer keys (A, B, C, D distributed naturally)
         const quizData = [
             // --- KATEGORI 1: PLSV 1 Langkah (5 Soal) ---
             {
                 id: 1,
                 category: "PLSV 1 Langkah",
                 question: "Nilai $x$ yang memenuhi persamaan $x + 7 = 15$ adalah...",
-                options: ["x = 8", "x = 7", "x = 22", "x = 12"],
-                correct: 0,
-                explanation: "Kurangi kedua ruas dengan 7:<br>$x = 15 - 7$<br><b>x = 8</b>"
+                options: ["$x = 8$", "$x = 12$", "$x = 7$", "$x = 22$"],
+                correct: 0, // A
+                explanation: "Kurangi kedua ruas dengan 7:<br>$x = 15 - 7$<br><b>$x = 8$</b>"
             },
             {
                 id: 2,
                 category: "PLSV 1 Langkah",
                 question: "Penyelesaian dari $y - 9 = 13$ adalah...",
-                options: ["y = 4", "y = 22", "y = 14", "y = 21"],
-                correct: 1,
-                explanation: "Tambahkan 9 pada kedua ruas:<br>$y = 13 + 9$<br><b>y = 22</b>"
+                options: ["$y = 4$", "$y = 14$", "$y = 22$", "$y = 21$"],
+                correct: 2, // C
+                explanation: "Tambahkan 9 pada kedua ruas:<br>$y = 13 + 9$<br><b>$y = 22$</b>"
             },
             {
                 id: 3,
                 category: "PLSV 1 Langkah",
                 question: "Nilai $k$ dari persamaan $4k = 28$ adalah...",
-                options: ["k = 6", "k = 24", "k = 7", "k = 32"],
-                correct: 2,
-                explanation: "Bagi kedua ruas dengan 4:<br>$k = \\frac{28}{4}$<br><b>k = 7</b>"
+                options: ["$k = 6$", "$k = 7$", "$k = 24$", "$k = 32$"],
+                correct: 1, // B
+                explanation: "Bagi kedua ruas dengan 4:<br>$k = \\frac{28}{4}$<br><b>$k = 7$</b>"
             },
             {
                 id: 4,
                 category: "PLSV 1 Langkah",
-                question: "Jika <span class=\"frac-vert\"><span class=\"top\">a</span><span class=\"bottom\">5</span></span> = 6, maka nilai $a$ adalah...",
-                options: ["a = 11", "a = 1,2", "a = 25", "a = 30"],
-                correct: 3,
-                explanation: "Kalikan kedua ruas dengan 5:<br>$a = 6 \\times 5$<br><b>a = 30</b>"
+                question: "Jika $\\frac{a}{5} = 6$, maka nilai $a$ adalah...",
+                options: ["$a = 11$", "$a = 25$", "$a = 1,2$", "$a = 30$"],
+                correct: 3, // D
+                explanation: "Kalikan kedua ruas dengan 5:<br>$a = 6 \\times 5$<br><b>$a = 30$</b>"
             },
             {
                 id: 5,
                 category: "PLSV 1 Langkah",
                 question: "Nilai $p$ yang memenuhi $p + 12 = 5$ adalah...",
-                options: ["p = -7", "p = 7", "p = 17", "p = -17"],
-                correct: 0,
-                explanation: "Kurangi kedua ruas dengan 12:<br>$p = 5 - 12$<br><b>p = -7</b>"
+                options: ["$p = -7$", "$p = 7$", "$p = 17$", "$p = -17$"],
+                correct: 0, // A
+                explanation: "Kurangi kedua ruas dengan 12:<br>$p = 5 - 12$<br><b>$p = -7$</b>"
             },
 
             // --- KATEGORI 2: PLSV 2 Langkah - 1 Ruas (10 Soal) ---
@@ -340,81 +345,81 @@
                 id: 6,
                 category: "PLSV 1 Ruas",
                 question: "Penyelesaian dari persamaan $2x + 5 = 17$ adalah...",
-                options: ["x = 11", "x = 6", "x = 8", "x = 12"],
-                correct: 1,
-                explanation: "<b>Langkah 1:</b> Pindahkan (+5) ke ruas kanan:<br>$2x = 17 - 5 \\implies 2x = 12$<br><b>Langkah 2:</b> Bagi bertingkat dengan 2:<br>$x = \\frac{12}{2} \\implies$ <b>x = 6</b>"
+                options: ["$x = 11$", "$x = 6$", "$x = 8$", "$x = 12$"],
+                correct: 1, // B
+                explanation: "<b>Langkah 1:</b> Pindahkan (+5) ke ruas kanan:<br>$2x = 17 - 5 \\implies 2x = 12$<br><b>Langkah 2:</b> Bagi bertingkat dengan 2:<br>$x = \\frac{12}{2} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 7,
                 category: "PLSV 1 Ruas",
                 question: "Nilai $x$ dari persamaan $3x - 4 = 14$ adalah...",
-                options: ["x = 4", "x = 5", "x = 6", "x = 18"],
-                correct: 2,
-                explanation: "<b>Langkah 1:</b> Pindahkan (-4) ke kanan:<br>$3x = 14 + 4 \\implies 3x = 18$<br><b>Langkah 2:</b> Bagi bertingkat dengan 3:<br>$x = \\frac{18}{3} \\implies$ <b>x = 6</b>"
+                options: ["$x = 4$", "$x = 5$", "$x = 18$", "$x = 6$"],
+                correct: 3, // D
+                explanation: "<b>Langkah 1:</b> Pindahkan (-4) ke kanan:<br>$3x = 14 + 4 \\implies 3x = 18$<br><b>Langkah 2:</b> Bagi bertingkat dengan 3:<br>$x = \\frac{18}{3} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 8,
                 category: "PLSV 1 Ruas",
                 question: "Jika $5x + 10 = 35$, berapakah nilai $x$?",
-                options: ["x = 7", "x = 25", "x = 9", "x = 5"],
-                correct: 3,
-                explanation: "<b>Langkah 1:</b> $5x = 35 - 10 \\implies 5x = 25$<br><b>Langkah 2:</b> $x = \\frac{25}{5} \\implies$ <b>x = 5</b>"
+                options: ["$x = 25$", "$x = 9$", "$x = 5$", "$x = 7$"],
+                correct: 2, // C
+                explanation: "<b>Langkah 1:</b> $5x = 35 - 10 \\implies 5x = 25$<br><b>Langkah 2:</b> $x = \\frac{25}{5} \\implies$ <b>$x = 5$</b>"
             },
             {
                 id: 9,
                 category: "PLSV 1 Ruas",
                 question: "Penyelesaian dari $4x - 6 = 18$ adalah...",
-                options: ["x = 6", "x = 3", "x = 24", "x = 12"],
-                correct: 0,
-                explanation: "<b>Langkah 1:</b> $4x = 18 + 6 \\implies 4x = 24$<br><b>Langkah 2:</b> $x = \\frac{24}{4} \\implies$ <b>x = 6</b>"
+                options: ["$x = 6$", "$x = 3$", "$x = 24$", "$x = 12$"],
+                correct: 0, // A
+                explanation: "<b>Langkah 1:</b> $4x = 18 + 6 \\implies 4x = 24$<br><b>Langkah 2:</b> $x = \\frac{24}{4} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 10,
                 category: "PLSV 1 Ruas",
                 question: "Nilai $x$ yang memenuhi $6x + 3 = 27$ adalah...",
-                options: ["x = 5", "x = 4", "x = 24", "x = 8"],
-                correct: 1,
-                explanation: "<b>Langkah 1:</b> $6x = 27 - 3 \\implies 6x = 24$<br><b>Langkah 2:</b> $x = \\frac{24}{6} \\implies$ <b>x = 4</b>"
+                options: ["$x = 5$", "$x = 24$", "$x = 4$", "$x = 8$"],
+                correct: 2, // C
+                explanation: "<b>Langkah 1:</b> $6x = 27 - 3 \\implies 6x = 24$<br><b>Langkah 2:</b> $x = \\frac{24}{6} \\implies$ <b>$x = 4$</b>"
             },
             {
                 id: 11,
                 category: "PLSV 1 Ruas",
                 question: "Penyelesaian dari $7x - 5 = 16$ adalah...",
-                options: ["x = 2", "x = 7", "x = 3", "x = 21"],
-                correct: 2,
-                explanation: "<b>Langkah 1:</b> $7x = 16 + 5 \\implies 7x = 21$<br><b>Langkah 2:</b> $x = \\frac{21}{7} \\implies$ <b>x = 3</b>"
+                options: ["$x = 2$", "$x = 7$", "$x = 21$", "$x = 3$"],
+                correct: 3, // D
+                explanation: "<b>Langkah 1:</b> $7x = 16 + 5 \\implies 7x = 21$<br><b>Langkah 2:</b> $x = \\frac{21}{7} \\implies$ <b>$x = 3$</b>"
             },
             {
                 id: 12,
                 category: "PLSV 1 Ruas",
                 question: "Jika $2x + 15 = 35$, maka nilai $x$ adalah...",
-                options: ["x = 20", "x = 25", "x = 12", "x = 10"],
-                correct: 3,
-                explanation: "<b>Langkah 1:</b> $2x = 35 - 15 \\implies 2x = 20$<br><b>Langkah 2:</b> $x = \\frac{20}{2} \\implies$ <b>x = 10</b>"
+                options: ["$x = 10$", "$x = 20$", "$x = 25$", "$x = 12$"],
+                correct: 0, // A
+                explanation: "<b>Langkah 1:</b> $2x = 35 - 15 \\implies 2x = 20$<br><b>Langkah 2:</b> $x = \\frac{20}{2} \\implies$ <b>$x = 10$</b>"
             },
             {
                 id: 13,
                 category: "PLSV 1 Ruas",
                 question: "Nilai $x$ yang memenuhi persamaan $8x - 12 = 28$ adalah...",
-                options: ["x = 5", "x = 40", "x = 2", "x = 8"],
-                correct: 0,
-                explanation: "<b>Langkah 1:</b> $8x = 28 + 12 \\implies 8x = 40$<br><b>Langkah 2:</b> $x = \\frac{40}{8} \\implies$ <b>x = 5</b>"
+                options: ["$x = 40$", "$x = 5$", "$x = 2$", "$x = 8$"],
+                correct: 1, // B
+                explanation: "<b>Langkah 1:</b> $8x = 28 + 12 \\implies 8x = 40$<br><b>Langkah 2:</b> $x = \\frac{40}{8} \\implies$ <b>$x = 5$</b>"
             },
             {
                 id: 14,
                 category: "PLSV 1 Ruas",
                 question: "Nilai $x$ dari persamaan $3x + 11 = 2$ adalah...",
-                options: ["x = 3", "x = -3", "x = -9", "x = 9"],
-                correct: 1,
-                explanation: "<b>Langkah 1:</b> $3x = 2 - 11 \\implies 3x = -9$<br><b>Langkah 2:</b> $x = \\frac{-9}{3} \\implies$ <b>x = -3</b>"
+                options: ["$x = 3$", "$x = -9$", "$x = -3$", "$x = 9$"],
+                correct: 2, // C
+                explanation: "<b>Langkah 1:</b> $3x = 2 - 11 \\implies 3x = -9$<br><b>Langkah 2:</b> $x = \\frac{-9}{3} \\implies$ <b>$x = -3$</b>"
             },
             {
                 id: 15,
                 category: "PLSV 1 Ruas",
                 question: "Penyelesaian dari $9x - 7 = 38$ adalah...",
-                options: ["x = 4", "x = 6", "x = 5", "x = 45"],
-                correct: 2,
-                explanation: "<b>Langkah 1:</b> $9x = 38 + 7 \\implies 9x = 45$<br><b>Langkah 2:</b> $x = \\frac{45}{9} \\implies$ <b>x = 5</b>"
+                options: ["$x = 4$", "$x = 6$", "$x = 45$", "$x = 5$"],
+                correct: 3, // D
+                explanation: "<b>Langkah 1:</b> $9x = 38 + 7 \\implies 9x = 45$<br><b>Langkah 2:</b> $x = \\frac{45}{9} \\implies$ <b>$x = 5$</b>"
             },
 
             // --- KATEGORI 3: PLSV Variabel di Kedua Ruas (10 Soal) ---
@@ -422,80 +427,80 @@
                 id: 16,
                 category: "PLSV 2 Ruas",
                 question: "Penyelesaian dari persamaan $4x + 3 = 2x + 11$ adalah...",
-                options: ["x = 7", "x = 8", "x = 2", "x = 4"],
-                correct: 3,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$4x - 2x = 11 - 3$<br>$2x = 8 \\implies x = \\frac{8}{2} \\implies$ <b>x = 4</b>"
+                options: ["$x = 8$", "$x = 4$", "$x = 2$", "$x = 7$"],
+                correct: 1, // B
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$4x - 2x = 11 - 3$<br>$2x = 8 \\implies x = \\frac{8}{2} \\implies$ <b>$x = 4$</b>"
             },
             {
                 id: 17,
                 category: "PLSV 2 Ruas",
                 question: "Nilai $x$ yang memenuhi $5x - 4 = 3x + 8$ adalah...",
-                options: ["x = 6", "x = 12", "x = 4", "x = 2"],
-                correct: 0,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$5x - 3x = 8 + 4$<br>$2x = 12 \\implies x = \\frac{12}{2} \\implies$ <b>x = 6</b>"
+                options: ["$x = 6$", "$x = 12$", "$x = 4$", "$x = 2$"],
+                correct: 0, // A
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$5x - 3x = 8 + 4$<br>$2x = 12 \\implies x = \\frac{12}{2} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 18,
                 category: "PLSV 2 Ruas",
                 question: "Jika $7x + 2 = 4x + 17$, maka nilai $x$ adalah...",
-                options: ["x = 3", "x = 5", "x = 15", "x = 6"],
-                correct: 1,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$7x - 4x = 17 - 2$<br>$3x = 15 \\implies x = \\frac{15}{3} \\implies$ <b>x = 5</b>"
+                options: ["$x = 3$", "$x = 15$", "$x = 6$", "$x = 5$"],
+                correct: 3, // D
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$7x - 4x = 17 - 2$<br>$3x = 15 \\implies x = \\frac{15}{3} \\implies$ <b>$x = 5$</b>"
             },
             {
                 id: 19,
                 category: "PLSV 2 Ruas",
                 question: "Penyelesaian dari $6x - 5 = 2x + 15$ adalah...",
-                options: ["x = 4", "x = 20", "x = 5", "x = 10"],
-                correct: 2,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$6x - 2x = 15 + 5$<br>$4x = 20 \\implies x = \\frac{20}{4} \\implies$ <b>x = 5</b>"
+                options: ["$x = 4$", "$x = 20$", "$x = 5$", "$x = 10$"],
+                correct: 2, // C
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$6x - 2x = 15 + 5$<br>$4x = 20 \\implies x = \\frac{20}{4} \\implies$ <b>$x = 5$</b>"
             },
             {
                 id: 20,
                 category: "PLSV 2 Ruas",
                 question: "Nilai $x$ dari persamaan $8x + 3 = 5x + 21$ adalah...",
-                options: ["x = 18", "x = 3", "x = 7", "x = 6"],
-                correct: 3,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$8x - 5x = 21 - 3$<br>$3x = 18 \\implies x = \\frac{18}{3} \\implies$ <b>x = 6</b>"
+                options: ["$x = 6$", "$x = 3$", "$x = 7$", "$x = 18$"],
+                correct: 0, // A
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$8x - 5x = 21 - 3$<br>$3x = 18 \\implies x = \\frac{18}{3} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 21,
                 category: "PLSV 2 Ruas",
                 question: "Nilai $x$ yang memenuhi $3x - 7 = x + 9$ adalah...",
-                options: ["x = 8", "x = 16", "x = 2", "x = 4"],
-                correct: 0,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$3x - x = 9 + 7$<br>$2x = 16 \\implies x = \\frac{16}{2} \\implies$ <b>x = 8</b>"
+                options: ["$x = 16$", "$x = 2$", "$x = 8$", "$x = 4$"],
+                correct: 2, // C
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$3x - x = 9 + 7$<br>$2x = 16 \\implies x = \\frac{16}{2} \\implies$ <b>$x = 8$</b>"
             },
             {
                 id: 22,
                 category: "PLSV 2 Ruas",
                 question: "Penyelesaian dari $9x + 4 = 4x + 39$ adalah...",
-                options: ["x = 35", "x = 7", "x = 5", "x = 8"],
-                correct: 1,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$9x - 4x = 39 - 4$<br>$5x = 35 \\implies x = \\frac{35}{5} \\implies$ <b>x = 7</b>"
+                options: ["$x = 7$", "$x = 35$", "$x = 5$", "$x = 8$"],
+                correct: 0, // A
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$9x - 4x = 39 - 4$<br>$5x = 35 \\implies x = \\frac{35}{5} \\implies$ <b>$x = 7$</b>"
             },
             {
                 id: 23,
                 category: "PLSV 2 Ruas",
                 question: "Jika $10x - 8 = 4x + 28$, berapakah nilai $x$?",
-                options: ["x = 36", "x = 4", "x = 6", "x = 10"],
-                correct: 2,
-                explanation: "<b>Kumpulkan suku sejenis:</b><br>$10x - 4x = 28 + 8$<br>$6x = 36 \\implies x = \\frac{36}{6} \\implies$ <b>x = 6</b>"
+                options: ["$x = 36$", "$x = 4$", "$x = 10$", "$x = 6$"],
+                correct: 3, // D
+                explanation: "<b>Kumpulkan suku sejenis:</b><br>$10x - 4x = 28 + 8$<br>$6x = 36 \\implies x = \\frac{36}{6} \\implies$ <b>$x = 6$</b>"
             },
             {
                 id: 24,
                 category: "PLSV 2 Ruas",
                 question: "Bentuk persamaan $2(x + 4) = 18$ memiliki nilai $x$ sebesar...",
-                options: ["x = 9", "x = 7", "x = 10", "x = 5"],
-                correct: 3,
+                options: ["$x = 9$", "$x = 5$", "$x = 7$", "$x = 10$"],
+                correct: 1, // B
                 explanation: "<b>Buka kurung terlebih dahulu:</b><br>$2x + 8 = 18$<br>$2x = 18 - 8 \\implies 2x = 10 \\implies x = 5$"
             },
             {
                 id: 25,
                 category: "PLSV 2 Ruas",
                 question: "Penyelesaian dari $3(2x - 1) = 21$ adalah...",
-                options: ["x = 4", "x = 24", "x = 8", "x = 3"],
-                correct: 0,
+                options: ["$x = 24$", "$x = 8$", "$x = 4$", "$x = 3$"],
+                correct: 2, // C
                 explanation: "<b>Buka kurung terlebih dahulu:</b><br>$6x - 3 = 21$<br>$6x = 21 + 3 \\implies 6x = 24 \\implies x = 4$"
             },
 
@@ -504,65 +509,68 @@
                 id: 26,
                 category: "Soal Cerita",
                 question: "Ani membeli 3 gelas minuman boba dan membayar ongkir Rp4.000,00. Total belanjaan Ani adalah Rp34.000,00. Jika harga 1 gelas minuman boba adalah $x$, berapakah harga 1 gelas boba?",
-                options: ["Rp8.000,00", "Rp10.000,00", "Rp12.000,00", "Rp30.000,00"],
-                correct: 1,
-                explanation: "<b>Model Matematika:</b> $3x + 4.000 = 34.000$<br>$3x = 34.000 - 4.000 \\implies 3x = 30.000$<br>$x = \\frac{30.000}{3} \\implies$ <b>x = Rp10.000,00</b>"
+                options: ["Rp10.000,00", "Rp8.000,00", "Rp12.000,00", "Rp30.000,00"],
+                correct: 0, // A
+                explanation: "<b>Model Matematika:</b> $3x + 4.000 = 34.000$<br>$3x = 34.000 - 4.000 \\implies 3x = 30.000$<br>$x = \\frac{30.000}{3} \\implies$ <b>$x = \\text{Rp}10.000,00$</b>"
             },
             {
                 id: 27,
                 category: "Soal Cerita",
                 question: "Umur Budi 5 tahun lebih tua dari umur Andi. Jika jumlah umur mereka berdua adalah 25 tahun, berapa umur Andi?",
-                options: ["15 tahun", "20 tahun", "10 tahun", "12 tahun"],
-                correct: 2,
+                options: ["15 tahun", "20 tahun", "12 tahun", "10 tahun"],
+                correct: 3, // D
                 explanation: "Misal umur Andi = $x$, maka umur Budi = $x + 5$.<br>$x + (x + 5) = 25 \\implies 2x + 5 = 25$<br>$2x = 20 \\implies$ <b>Umur Andi = 10 tahun</b>"
             },
             {
                 id: 28,
                 category: "Soal Cerita",
                 question: "Keliling sebuah persegi panjang adalah 36 cm. Jika panjangnya $(x + 4)$ cm dan lebarnya $x$ cm, berapakah nilai $x$?",
-                options: ["x = 14", "x = 9", "x = 11", "x = 7"],
-                correct: 3,
-                explanation: "<b>Keliling:</b> $2(p + l) = 36 \\implies p + l = 18$<br>$(x + 4) + x = 18 \\implies 2x + 4 = 18$<br>$2x = 14 \\implies$ <b>x = 7</b>"
+                options: ["$x = 9$", "$x = 7$", "$x = 11$", "$x = 14$"],
+                correct: 1, // B
+                explanation: "<b>Keliling:</b> $2(p + l) = 36 \\implies p + l = 18$<br>$(x + 4) + x = 18 \\implies 2x + 4 = 18$<br>$2x = 14 \\implies$ <b>$x = 7$</b>"
             },
             {
                 id: 29,
                 category: "Soal Cerita",
                 question: "Dimas membeli 4 buah pensil dan menyerahkan uang Rp20.000,00. Ia mendapat uang kembalian sebesar Rp4.000,00. Harga 1 buah pensil adalah...",
-                options: ["Rp4.000,00", "Rp5.000,00", "Rp16.000,00", "Rp3.500,00"],
-                correct: 0,
+                options: ["Rp5.000,00", "Rp16.000,00", "Rp4.000,00", "Rp3.500,00"],
+                correct: 2, // C
                 explanation: "<b>Model Matematika:</b> $20.000 - 4x = 4.000$<br>$4x = 20.000 - 4.000 \\implies 4x = 16.000$<br>$x = \\frac{16.000}{4} \\implies$ <b>Harga 1 pensil = Rp4.000,00</b>"
             },
             {
                 id: 30,
                 category: "Soal Cerita",
                 question: "Tiga bilangan bulat berurutan jika dijumlahkan hasilnya adalah 45. Berapakah bilangan yang paling kecil di antara ketiga bilangan tersebut?",
-                options: ["15", "14", "16", "42"],
-                correct: 1,
+                options: ["14", "15", "16", "42"],
+                correct: 0, // A
                 explanation: "Misal 3 bilangan tersebut adalah $x, (x+1), (x+2)$.<br>$x + (x+1) + (x+2) = 45 \\implies 3x + 3 = 45$<br>$3x = 42 \\implies x = 14$.<br>Jadi bilangan terkecil adalah <b>14</b>."
             }
         ];
 
         // State Storage Keys
-        const STORAGE_KEY = 'plsv_quiz_user_state_v1';
+        const STORAGE_KEY = 'plsv_quiz_user_state_v3';
 
-        // State Variables
-        let currentState = {
-            currentIndex: 0,
-            answers: {},  // { qIndex: selectedOptionIndex }
-            flags: {}     // { qIndex: true/false }
-        };
+        // Core App State
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let flaggedQuestions = new Array(quizData.length).fill(false);
 
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize App on DOM Load
+        window.onload = function() {
             loadState();
-            renderQuestion(currentState.currentIndex);
+            renderQuestion();
             renderGridPalettes();
             updateHeaderStats();
-        });
+        };
 
         // Save State to LocalStorage
         function saveState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+            const state = {
+                currentQuestionIndex,
+                userAnswers,
+                flaggedQuestions
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
 
         // Load State from LocalStorage
@@ -570,279 +578,323 @@
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 try {
-                    currentState = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Error loading quiz state", e);
+                    const parsed = JSON.parse(saved);
+                    currentQuestionIndex = parsed.currentQuestionIndex || 0;
+                    userAnswers = parsed.userAnswers || new Array(quizData.length).fill(null);
+                    flaggedQuestions = parsed.flaggedQuestions || new Array(quizData.length).fill(false);
+                } catch (e) {
+                    console.error("Failed to parse saved state", e);
                 }
             }
         }
 
-        // Render Active Question
-        function renderQuestion(index) {
-            const q = quizData[index];
-            currentState.currentIndex = index;
-            saveState();
+        // Render Math equations with KaTeX safely
+        function triggerMathRender() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError : false
+                });
+            }
+        }
 
-            // Update Header & Badges
-            document.getElementById('q-number-badge').innerText = `Soal ${index + 1} dari 30`;
+        // Render Current Question View
+        function renderQuestion() {
+            const q = quizData[currentQuestionIndex];
+            const isAnswered = userAnswers[currentQuestionIndex] !== null;
+
+            // Badges & Tag
+            document.getElementById('q-number-badge').innerText = `Soal ${currentQuestionIndex + 1} / 30`;
             document.getElementById('q-category-tag').innerText = q.category;
-            document.getElementById('q-text-content').innerHTML = q.question;
 
-            // Flag Button status
+            // Flag Button visual state
             const flagBtn = document.getElementById('flag-btn');
-            if (currentState.flags[index]) {
+            if (flaggedQuestions[currentQuestionIndex]) {
                 flagBtn.className = "text-xs font-bold px-3 py-1.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-amber-700 flex items-center space-x-1";
-                flagBtn.innerHTML = `<i class="fa-solid fa-bookmark text-amber-500"></i> <span>Ditandai</span>`;
+                flagBtn.innerHTML = `<i class="fa-solid fa-bookmark"></i><span>Ditandai</span>`;
             } else {
                 flagBtn.className = "text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition text-slate-600 flex items-center space-x-1";
-                flagBtn.innerHTML = `<i class="fa-regular fa-bookmark"></i> <span>Tandai</span>`;
+                flagBtn.innerHTML = `<i class="fa-regular fa-bookmark"></i><span>Tandai</span>`;
             }
 
+            // Question Text
+            document.getElementById('q-text-content').innerHTML = q.question;
+
             // Render Options (A, B, C, D)
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
 
-            const isAnswered = currentState.answers.hasOwnProperty(index);
-            const userAnswer = currentState.answers[index];
-            const labels = ['A', 'B', 'C', 'D'];
-
-            q.options.forEach((optText, optIdx) => {
+            const optionLabels = ['A', 'B', 'C', 'D'];
+            
+            q.options.forEach((optText, idx) => {
                 const btn = document.createElement('button');
-                btn.onclick = () => selectOption(index, optIdx);
+                btn.onclick = () => selectOption(idx);
                 
-                let btnStyle = "w-full text-left p-4 rounded-2xl border-2 font-extrabold text-sm md:text-base transition flex items-center justify-between ";
+                let btnStyle = "w-full text-left p-4 rounded-2xl border-2 transition-all flex items-center justify-between font-semibold text-sm md:text-base ";
 
                 if (!isAnswered) {
-                    btnStyle += "border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 text-slate-800";
+                    btnStyle += "border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/50 text-slate-700";
                 } else {
-                    btn.disabled = true; // Lock options once answered
-                    if (optIdx === q.correct) {
-                        btnStyle += "border-emerald-500 bg-emerald-50 text-emerald-900 shadow-sm";
-                    } else if (optIdx === userAnswer && userAnswer !== q.correct) {
-                        btnStyle += "border-rose-500 bg-rose-50 text-rose-900 shadow-sm";
+                    const userChoice = userAnswers[currentQuestionIndex];
+                    if (idx === q.correct) {
+                        btnStyle += "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold shadow-sm";
+                    } else if (idx === userChoice) {
+                        btnStyle += "border-rose-500 bg-rose-50 text-rose-900 font-bold";
                     } else {
-                        btnStyle += "border-slate-200 bg-slate-50 text-slate-400 opacity-60";
+                        btnStyle += "border-slate-200 opacity-60 text-slate-500";
                     }
                 }
 
                 btn.className = btnStyle;
-
-                // Inner HTML with Option Label Badge
-                let iconMarkup = '';
+                
+                let iconIndicator = '';
                 if (isAnswered) {
-                    if (optIdx === q.correct) {
-                        iconMarkup = '<i class="fa-solid fa-circle-check text-emerald-600 text-xl"></i>';
-                    } else if (optIdx === userAnswer && userAnswer !== q.correct) {
-                        iconMarkup = '<i class="fa-solid fa-circle-xmark text-rose-600 text-xl"></i>';
+                    if (idx === q.correct) {
+                        iconIndicator = `<span class="bg-emerald-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>`;
+                    } else if (idx === userAnswers[currentQuestionIndex]) {
+                        iconIndicator = `<span class="bg-rose-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></span>`;
                     }
                 }
 
                 btn.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black border ${
-                            isAnswered && optIdx === q.correct ? 'bg-emerald-600 text-white border-emerald-600' :
-                            isAnswered && optIdx === userAnswer && userAnswer !== q.correct ? 'bg-rose-600 text-white border-rose-600' :
-                            'bg-white text-slate-700 border-slate-300'
-                        }">
-                            ${labels[optIdx]}
+                    <div class="flex items-center space-x-3.5">
+                        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center font-extrabold text-slate-600 text-sm border border-slate-200">
+                            ${optionLabels[idx]}
                         </span>
                         <span>${optText}</span>
                     </div>
-                    <div>${iconMarkup}</div>
+                    ${iconIndicator}
                 `;
 
-                container.appendChild(btn);
+                optionsContainer.appendChild(btn);
             });
 
-            // Explanation Box
+            // Explanation Box Handling
             const expBox = document.getElementById('explanation-box');
             if (isAnswered) {
                 expBox.classList.remove('hidden');
-                const isCorrect = userAnswer === q.correct;
-                
+                const isCorrect = userAnswers[currentQuestionIndex] === q.correct;
                 if (isCorrect) {
-                    expBox.className = "mt-6 p-5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/70 transition-all duration-300";
-                    document.getElementById('explanation-title').className = "flex items-center space-x-2 font-extrabold text-sm mb-2 text-emerald-800";
-                    document.getElementById('explanation-title').innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i><span>Jawaban Kamu Benar! 🎉</span>';
+                    expBox.className = "mt-6 p-5 rounded-2xl border bg-emerald-50 border-emerald-200 text-slate-800 transition-all duration-300";
+                    document.getElementById('explanation-title').className = "flex items-center space-x-2 font-extrabold text-sm mb-2 text-emerald-700";
+                    document.getElementById('explanation-title').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span>Jawaban Kamu Benar!</span>`;
                 } else {
-                    expBox.className = "mt-6 p-5 rounded-2xl border-2 border-rose-300 bg-rose-50/70 transition-all duration-300";
-                    document.getElementById('explanation-title').className = "flex items-center space-x-2 font-extrabold text-sm mb-2 text-rose-800";
-                    document.getElementById('explanation-title').innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-600"></i><span>Jawaban Kurang Tepat! Silakan pelajari solusinya:</span>';
+                    expBox.className = "mt-6 p-5 rounded-2xl border bg-rose-50 border-rose-200 text-slate-800 transition-all duration-300";
+                    document.getElementById('explanation-title').className = "flex items-center space-x-2 font-extrabold text-sm mb-2 text-rose-700";
+                    document.getElementById('explanation-title').innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i><span>Jawaban Kamu Belum Tepat</span>`;
                 }
-
                 document.getElementById('explanation-text').innerHTML = q.explanation;
             } else {
                 expBox.classList.add('hidden');
             }
 
-            // Nav Buttons Disabled States
-            document.getElementById('prev-btn').disabled = index === 0;
-            document.getElementById('next-btn').disabled = index === quizData.length - 1;
+            // Update Previous/Next Buttons state
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            document.getElementById('next-btn').disabled = currentQuestionIndex === quizData.length - 1;
 
+            // Trigger KaTeX Formula Render
+            setTimeout(triggerMathRender, 20);
+        }
+
+        // Handle User Option Selection
+        function selectOption(index) {
+            // Record answer if not yet answered or allow changing answer
+            userAnswers[currentQuestionIndex] = index;
+            saveState();
+            renderQuestion();
             renderGridPalettes();
             updateHeaderStats();
         }
 
-        // Handle Option Selection (Immediate Feedback)
-        function selectOption(qIndex, optionIndex) {
-            if (currentState.answers.hasOwnProperty(qIndex)) return; // Prevents re-selection
-
-            currentState.answers[qIndex] = optionIndex;
-            saveState();
-            renderQuestion(qIndex);
-
-            // Confetti effect on correct answer!
-            if (optionIndex === quizData[qIndex].correct) {
-                confetti({
-                    particleCount: 25,
-                    spread: 40,
-                    origin: { y: 0.8 }
-                });
-            }
-        }
-
-        // Toggle Flag Question
+        // Toggle Flag Current Question
         function toggleFlagCurrentQuestion() {
-            const idx = currentState.currentIndex;
-            currentState.flags[idx] = !currentState.flags[idx];
+            flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
             saveState();
-            renderQuestion(idx);
+            renderQuestion();
+            renderGridPalettes();
         }
 
-        // Next / Prev Navigation
+        // Navigation Controls
         function nextQuestion() {
-            if (currentState.currentIndex < quizData.length - 1) {
-                renderQuestion(currentState.currentIndex + 1);
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                saveState();
+                renderQuestion();
+                renderGridPalettes();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
         function prevQuestion() {
-            if (currentState.currentIndex > 0) {
-                renderQuestion(currentState.currentIndex - 1);
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                saveState();
+                renderQuestion();
+                renderGridPalettes();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        function goToQuestion(index) {
-            renderQuestion(index);
-            document.getElementById('nav-modal').classList.add('hidden');
+        function goToQuestion(idx) {
+            currentQuestionIndex = idx;
+            saveState();
+            renderQuestion();
+            renderGridPalettes();
+            const navModal = document.getElementById('nav-modal');
+            if (!navModal.classList.contains('hidden')) {
+                toggleNavModal();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Update Nav Grid Palettes (Desktop & Mobile)
+        // Render Grid Palettes (Desktop + Mobile)
         function renderGridPalettes() {
             const desktopPalette = document.getElementById('desktop-grid-palette');
             const mobilePalette = document.getElementById('mobile-grid-palette');
 
-            let html = '';
+            desktopPalette.innerHTML = '';
+            mobilePalette.innerHTML = '';
+
             quizData.forEach((q, idx) => {
-                const isAnswered = currentState.answers.hasOwnProperty(idx);
-                const isCorrect = isAnswered && currentState.answers[idx] === q.correct;
-                const isWrong = isAnswered && currentState.answers[idx] !== q.correct;
-                const isFlagged = currentState.flags[idx];
-                const isActive = idx === currentState.currentIndex;
+                const ans = userAnswers[idx];
+                const isCurrent = idx === currentQuestionIndex;
+                const isFlagged = flaggedQuestions[idx];
 
-                let classes = "w-full aspect-square rounded-xl font-extrabold text-xs transition flex items-center justify-center shadow-sm ";
-                
-                if (isActive) {
-                    classes += "ring-4 ring-indigo-400 outline-none z-10 scale-105 ";
+                let statusClass = "q-btn-unanswered";
+                if (ans !== null) {
+                    if (ans === q.correct) {
+                        statusClass = "q-btn-correct";
+                    } else {
+                        statusClass = "q-btn-wrong";
+                    }
                 }
 
-                if (isCorrect) {
-                    classes += "bg-emerald-500 text-white ";
-                } else if (isWrong) {
-                    classes += "bg-rose-500 text-white ";
-                } else {
-                    classes += "bg-slate-200 text-slate-700 hover:bg-slate-300 ";
-                }
+                let activeClass = isCurrent ? "ring-4 ring-indigo-400 outline outline-2 outline-indigo-600 font-extrabold z-10" : "";
+                let flagClass = isFlagged ? "q-btn-flagged" : "";
 
-                if (isFlagged) {
-                    classes += "border-2 border-amber-500 ";
-                }
+                const btnHTML = `
+                    <button onclick="goToQuestion(${idx})" class="w-full aspect-square rounded-xl text-xs font-bold transition flex items-center justify-center relative ${statusClass} ${activeClass} ${flagClass}">
+                        ${idx + 1}
+                        ${isFlagged ? '<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full border border-white"></span>' : ''}
+                    </button>
+                `;
 
-                html += `<button onclick="goToQuestion(${idx})" class="${classes}">${idx + 1}</button>`;
+                desktopPalette.insertAdjacentHTML('beforeend', btnHTML);
+                mobilePalette.insertAdjacentHTML('beforeend', btnHTML);
             });
-
-            desktopPalette.innerHTML = html;
-            mobilePalette.innerHTML = html;
         }
 
-        // Update Header Counter Stats
+        // Update Header Stats Bar
         function updateHeaderStats() {
-            let correctCount = 0;
-            let wrongCount = 0;
+            let correct = 0;
+            let wrong = 0;
+            let answered = 0;
 
-            Object.keys(currentState.answers).forEach(qIdx => {
-                if (currentState.answers[qIdx] === quizData[qIdx].correct) {
-                    correctCount++;
-                } else {
-                    wrongCount++;
+            userAnswers.forEach((ans, idx) => {
+                if (ans !== null) {
+                    answered++;
+                    if (ans === quizData[idx].correct) {
+                        correct++;
+                    } else {
+                        wrong++;
+                    }
                 }
             });
 
-            const answeredCount = Object.keys(currentState.answers).length;
-
-            document.getElementById('header-correct').innerText = correctCount;
-            document.getElementById('header-wrong').innerText = wrongCount;
-            document.getElementById('header-answered').innerText = answeredCount;
+            document.getElementById('header-correct').innerText = correct;
+            document.getElementById('header-wrong').innerText = wrong;
+            document.getElementById('header-answered').innerText = answered;
         }
 
-        // Toggle Mobile Nav Modal
+        // Toggle Navigation Modal
         function toggleNavModal() {
             const modal = document.getElementById('nav-modal');
             modal.classList.toggle('hidden');
         }
 
-        // Finish Quiz & Show Score Modal
+        // Reset Quiz Confirmation
+        function resetQuizConfirm() {
+            if (confirm("Apakah kamu yakin ingin mengulangi kuis dari awal? Semua jawaban akan di-reset.")) {
+                userAnswers = new Array(quizData.length).fill(null);
+                flaggedQuestions = new Array(quizData.length).fill(false);
+                currentQuestionIndex = 0;
+                localStorage.removeItem(STORAGE_KEY);
+                renderQuestion();
+                renderGridPalettes();
+                updateHeaderStats();
+                
+                const resultModal = document.getElementById('result-modal');
+                if (!resultModal.classList.contains('hidden')) {
+                    resultModal.classList.add('hidden');
+                }
+                const navModal = document.getElementById('nav-modal');
+                if (!navModal.classList.contains('hidden')) {
+                    navModal.classList.add('hidden');
+                }
+            }
+        }
+
+        // Finish Quiz Modal & Detailed Analysis
         function finishQuizModal() {
-            let correctCount = 0;
-            let wrongCount = 0;
+            let correct = 0;
+            let wrong = 0;
+            let unanswered = 0;
 
-            // Category score counters
-            let catScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            let catCorrect = [0, 0, 0, 0];
+            let catTotal = [5, 10, 10, 5];
 
-            quizData.forEach((q, idx) => {
-                if (currentState.answers.hasOwnProperty(idx)) {
-                    if (currentState.answers[idx] === q.correct) {
-                        correctCount++;
-                        if (idx < 5) catScores[1]++;
-                        else if (idx < 15) catScores[2]++;
-                        else if (idx < 25) catScores[3]++;
-                        else catScores[4]++;
-                    } else {
-                        wrongCount++;
-                    }
+            userAnswers.forEach((ans, idx) => {
+                const q = quizData[idx];
+                let catIdx = 0;
+                if (q.category === "PLSV 1 Langkah") catIdx = 0;
+                else if (q.category === "PLSV 1 Ruas") catIdx = 1;
+                else if (q.category === "PLSV 2 Ruas") catIdx = 2;
+                else if (q.category === "Soal Cerita") catIdx = 3;
+
+                if (ans === null) {
+                    unanswered++;
+                } else if (ans === q.correct) {
+                    correct++;
+                    catCorrect[catIdx]++;
+                } else {
+                    wrong++;
                 }
             });
 
-            const totalAnswered = Object.keys(currentState.answers).length;
-            const unanswered = quizData.length - totalAnswered;
-            const scorePercentage = Math.round((correctCount / quizData.length) * 100);
+            const score = Math.round((correct / quizData.length) * 100);
 
-            document.getElementById('final-score-val').innerText = `${scorePercentage} / 100`;
-            document.getElementById('res-correct').innerText = correctCount;
-            document.getElementById('res-wrong').innerText = wrongCount;
+            document.getElementById('final-score-val').innerText = `${score} / 100`;
+            document.getElementById('res-correct').innerText = correct;
+            document.getElementById('res-wrong').innerText = wrong;
             document.getElementById('res-unanswered').innerText = unanswered;
 
-            document.getElementById('cat-score-1').innerText = `${catScores[1]} / 5`;
-            document.getElementById('cat-score-2').innerText = `${catScores[2]} / 10`;
-            document.getElementById('cat-score-3').innerText = `${catScores[3]} / 10`;
-            document.getElementById('cat-score-4').innerText = `${catScores[4]} / 5`;
+            document.getElementById('cat-score-1').innerText = `${catCorrect[0]}/${catTotal[0]}`;
+            document.getElementById('cat-score-2').innerText = `${catCorrect[1]}/${catTotal[1]}`;
+            document.getElementById('cat-score-3').innerText = `${catCorrect[2]}/${catTotal[2]}`;
+            document.getElementById('cat-score-4').innerText = `${catCorrect[3]}/${catTotal[3]}`;
 
-            // Custom Message
+            // Message according to score
             const msgEl = document.getElementById('final-score-msg');
-            if (scorePercentage >= 85) {
-                msgEl.innerText = "🌟 Sangat Luar Biasa! Kamu sudah menguasai materi PLSV dengan sempurna!";
-            } else if (scorePercentage >= 65) {
-                msgEl.innerText = "👍 Hasil Bagus! Teruskan latihan untuk menyempurnakan langkah-langkahmu.";
+            if (score >= 90) {
+                msgEl.innerText = "Sempurna! Kamu telah menguasai Persamaan Linear Satu Variabel!";
+            } else if (score >= 75) {
+                msgEl.innerText = "Sangat Bagus! Pemahaman matematika kamu sudah tinggi!";
+            } else if (score >= 60) {
+                msgEl.innerText = "Bagus! Teruskan berlatih untuk hasil yang lebih maksimal!";
             } else {
-                msgEl.innerText = "💪 Tetap Semangat! Tinjau kembali penjelasan soal untuk memperkuat pemahaman.";
+                msgEl.innerText = "Tetap semangat! Pelajari kembali pembahasan soal dan coba lagi!";
             }
 
             document.getElementById('result-modal').classList.remove('hidden');
 
-            if (scorePercentage >= 70) {
+            // Fire confetti if high score
+            if (score >= 70 && typeof confetti === 'function') {
                 confetti({
-                    particleCount: 120,
-                    spread: 80,
+                    particleCount: 100,
+                    spread: 70,
                     origin: { y: 0.6 }
                 });
             }
@@ -850,22 +902,6 @@
 
         function closeResultModal() {
             document.getElementById('result-modal').classList.add('hidden');
-        }
-
-        // Reset Quiz & Clear LocalStorage
-        function resetQuizConfirm() {
-            if (confirm("Apakah Anda yakin ingin mengulang kuis dari awal? Semua jawaban tersimpan akan dihapus.")) {
-                localStorage.removeItem(STORAGE_KEY);
-                currentState = {
-                    currentIndex: 0,
-                    answers: {},
-                    flags: {}
-                };
-                saveState();
-                renderQuestion(0);
-                document.getElementById('result-modal').classList.add('hidden');
-                document.getElementById('nav-modal').classList.add('hidden');
-            }
         }
     </script>
 </body>
